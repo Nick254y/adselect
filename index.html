@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account</title>
+<style>
+* {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ font-family: Arial, sans-serif;
+}
+body {
+ background: #f3f5fa;
+ min-height: 100vh;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ padding: 20px;
+}
+.container {
+ background: white;
+ width: 100%;
+ max-width: 430px;
+ padding: 30px;
+ border-radius: 15px;
+ box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+}
+.logo {
+ text-align: center;
+ font-size: 27px;
+ font-weight: bold;
+ color: #173b70;
+ margin-bottom: 10px;
+}
+.subtitle {
+ text-align: center;
+ color: #777;
+ margin-bottom: 25px;
+}
+h2 {
+ text-align: center;
+ margin-bottom: 20px;
+ color: #222;
+}
+label {
+ display: block;
+ margin: 13px 0 7px;
+ font-size: 14px;
+ font-weight: bold;
+}
+input {
+ width: 100%;
+ padding: 13px;
+ border: 1px solid #ddd;
+ border-radius: 7px;
+ outline: none;
+ font-size: 15px;
+}
+input:focus {
+ border-color: #2165b5;
+}
+button {
+ width: 100%;
+ padding: 14px;
+ background: #1756a5;
+ color: white;
+ border: none;
+ border-radius: 7px;
+ font-size: 16px;
+ font-weight: bold;
+ margin-top: 23px;
+ cursor: pointer;
+}
+button:hover {
+ background: #103f7d;
+}
+.login {
+ text-align: center;
+ margin-top: 20px;
+ color: #666;
+ font-size: 14px;
+}
+.login a {
+ color: #1756a5;
+ text-decoration: none;
+ font-weight: bold;
+}
+.terms {
+ font-size: 12px;
+ color: #777;
+ margin-top: 15px;
+ text-align: center;
+}
+#message {
+ text-align: center;
+ margin-top: 12px;
+ font-size: 14px;
+}
+.password-box {
+ display: flex;
+ align-items: center;
+ border: 1px solid #ddd;
+ border-radius: 7px;
+ overflow: hidden;
+}
+.password-box input {
+    border: none;
+    outline: none;
+ flex: 1;
+}
+.password-box button {
+    width: 45px;
+    margin: 0;
+ padding: 10px;
+ background: white;
+ color: #1756a5;
+ border: none;
+ cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="container">
+ <div class="logo">AD PLATFORM</div>
+ <p class="subtitle">Earn. Simply.</p>
+ <h2>Create Account</h2>
+ <button>$10 signup bonus</button>
+ <form id="registerForm">
+ <label>Full Name</label>
+ <input type="text" id="name"
+ placeholder="Enter your full name" required>
+ <label>Email Address</label>
+ <input type="email" id="email"
+ placeholder="Enter your email" required>
+ <label>Phone Number</label>
+ <input type="tel" id="phone"
+ placeholder="Enter phone number" required>
+ <label>Password</label>
+ <div class="password-box">
+ <input type="password" id="password"
+ placeholder="Create password" required minlength="8">
+ <button type="button" onclick="togglePassword('password', this)">🙈</button>
+ </div>
+ <label>Confirm Password</label>
+ <div class="password-box">
+ <input type="password" id="confirmPassword"
+ placeholder="Confirm password" required>
+ <button type="button" onclick="togglePassword('confirmPassword', this)">🙈</button>
+ </div>
+ <label>Referral Code</label>
+ <input type="text" id="referral"
+ placeholder="Enter referral code">
+ <button type="submit">Create Account</button>
+ <p id="message"></p>
+ </form>
+ <p class="terms">
+ By registering, you agree to our
+ Terms and Conditions.
+ </p>
+ <p class="login">
+ Already have an account?
+ <a href="login.html">Login</a>
+ </p>
+</div>
+<script>
+// Automatically read referral code from URL
+const params = new URLSearchParams(window.location.search);
+document.getElementById("referral").value =
+ params.get("ref") || "";
+document.getElementById("registerForm")
+.addEventListener("submit", function(event) {
+ event.preventDefault();
+ const password =
+ document.getElementById("password").value;
+ const confirmPassword =
+ document.getElementById("confirmPassword").value;
+ const message =
+ document.getElementById("message");
+ if (password !== confirmPassword) {
+ message.style.color = "red";
+ message.textContent = "Passwords do not match!";
+ return;
+ }
+ message.style.color = "green";
+ message.textContent =
+ "Demo registration successful! Backend not connected.";
+});
+function togglePassword(inputId, button) {
+ const input = document.getElementById(inputId);
+ if (input.type === "password") {
+ input.type = "text";
+ button.textContent = "👀";
+ } else {
+ input.type = "password";
+ button.textContent = "🙈";
+ }
+}
+document.getElementById("registerForm")
+.addEventListener("submit", async function(event) {
+ event.preventDefault();
+ const data = {
+         name:
+  document.getElementById("name").value,
+       email:
+  document.getElementById("email").value,
+ phone:
+  document.getElementById("phone").value,
+ password:
+  document.getElementById("password").value,
+ referral:
+  document.getElementById("referral").value
+ };
+ const message = document.getElementById("message");
+ const confirmPassword =
+ document.getElementById("confirmPassword").value;
+ if (data.password !== confirmPassword) {
+ message.textContent = "Passwords do not match!";
+ message.style.color = "red";
+ return;
+ }
+ try {
+ const response = await fetch("/api/register", {
+ method: "POST",
+ headers: { "Content-Type": "application/json" },
+ body: JSON.stringify(data)
+ });
+ const result = await response.json();
+ message.textContent = result.message;
+ message.style.color = response.ok ? "green" : "red";
+ } catch (error) {
+ message.textContent = "Cannot connect to server.";
+ message.style.color = "red";
+ }
+});
+</script>
+</body>
+</html>
+
+
+
+
