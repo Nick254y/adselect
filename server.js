@@ -84,8 +84,15 @@ app.post("/api/login", async (req, res) => {
  return res.status(401).json({ message: "Invalid email or password." });
  }
  req.session.userId = user.id;
- res.json({ message: "Login successful!", name: user.name });
- } catch (error) {
+return res.json({
+           success:true,
+           message: "Login successful!",
+    user:{
+           name: user.name,
+           balance:user.balance,
+           isPremium:user.is_premium
+  }
+    }); catch (error) {
  console.error(error);
  res.status(500).json({ message: "Login failed." });
  }
