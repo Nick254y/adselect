@@ -5,15 +5,16 @@ const session = require("express-session");
 require("dotenv").config();
 const app = express();
 const db = new Database("users.db");
-db.exec(`
- CREATE TABLE IF NOT EXISTS users (
- id INTEGER PRIMARY KEY AUTOINCREMENT,
- name TEXT NOT NULL,
- email TEXT NOT NULL UNIQUE,
- phone TEXT NOT NULL,
- password TEXT NOT NULL,
- referral TEXT,
- created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+db.exec(`CREATE TABLE IF NOT EXISTS users(
+id INTEGER PRIMARY KEY AUTOINCREME
+name TEXT  NOT NULL,
+email TEXT NOT NULL UNIQUE,
+phone TEXT NOT NULL,
+password TEXT NOT NULL,
+referral TEXT,
+balance REAL DEFAULT 10.0,
+is_premium INTEGER DEFAULT 0,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP
  )
 `);
 app.use(express.json());
