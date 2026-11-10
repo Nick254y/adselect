@@ -64,6 +64,12 @@
  event.preventDefault();
  alert("Login backend is not connected yet.");
  });
+ if(data.success){
+  sessionStorage.setItem('userName',data.user.name);
+  sessionStorage.setItem('useBalance',data.user.balance);
+  sessionStorage.setItem('isPremium',data.user.isPremium);
+  window.location.href='/dashboard.html';
+  } else {
 </script>
 </body>
 </html>
